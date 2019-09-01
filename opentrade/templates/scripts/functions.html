@@ -1,0 +1,269 @@
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+<script>
+
+    // Init functions
+
+    window.addEventListener("DOMContentLoaded", function() {
+        // do stuff
+        console.log("Functions loaded!");
+    }, false);
+
+    //Header functions
+
+    async function setHeaderWalletAmount(){
+        const url = '{{ BASE_URL }}/api/wallet/amount/';
+        await fetch(url, {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }})
+            .then((res) => {
+                return res.json();})
+            .then((data) => {
+                $("#id-head-div-wallet_amount").html(data.wallet.amount);
+                console.log(data.wallet.amount);
+            });
+    }
+
+    // Portfolio functions
+
+    function removeOrderRow(e) {
+        Promise.resolve(closeOrder(e));
+
+    }
+
+    async function getPortfolio(){
+        console.log("Get portfolio!!!");
+        const url = '{{ BASE_URL }}/api/portfolio/all/';
+        await fetch(url, {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }})
+            .then((res) => {
+                return res.json();})
+            .then((assets) => {
+                renderPortfolioTable(assets.shares)
+            });
+
+    }
+
+    async function closeOrder(e){
+        const obj_val = getValue(e);
+        const url = '{{ BASE_URL }}/api/shares/close/';
+        const data = { ref: obj_val };
+        await fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }
+        }).then(function (res) {
+            if(res.status >= 200 && res.status < 400){
+                alert(" [Successful operation]\n [Close order]");
+
+                $("#tr-"+obj_val).remove();
+                setHeaderWalletAmount();
+            }else{
+                alert("Failed operation");
+            }
+        });
+
+    }
+
+
+
+    function renderPortfolioTable(assets){
+        const html = assets.map(asset => {
+            const order_id = asset.ref;
+            const symbol = asset.symbol;
+            const operation = asset.operation;
+            const date = asset.date;
+            const timestamp = asset.timestamp;
+            const quantity = asset.quantity;
+            const price = asset.price;
+            const total = quantity*price;
+            return `
+                <tr id="tr-${order_id}">
+                    <td>${symbol}</td>
+                    <td>${operation}</td>
+                    <td>${date}</td>
+                    <td>${timestamp}</td>
+                    <td>${quantity}</td>
+                    <td>${price}</td>
+                    <td>${total}</td>
+                    <td>
+                            <button
+                                type="button"
+                                class="btn btn-primary close-order-button"
+                                value="${order_id}"
+                                id="close-btn-${order_id}"
+                                >
+                            Close order
+                            </button>
+                    </td>
+                </tr>
+                `;
+        });
+        $("#tbody-orders").html(html);
+        bindCloseOrderBtn();
+    }
+
+
+    // Summary functions
+
+    async function getSummary(){
+        console.log("Get summary executed!!!");
+        const url = '{{ BASE_URL }}/api/portfolio/summary/';
+        await fetch(url, {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }})
+            .then((res) => {
+                return res.json();})
+            .then((assets) => {
+                renderSummaryTable(assets.shares)
+            });
+
+    }
+
+    function renderSummaryTable(assets){
+        const html = assets.map(asset => {
+            const order_id = asset.ref;
+            const symbol = asset.symbol;
+            const operation = asset.operation;
+            const date = asset.date;
+            const timestamp = asset.timestamp;
+            const quantity = asset.quantity;
+            const price = asset.price;
+            const total = quantity*price;
+            const state = asset.closed ? 'closed' : 'open';
+            return `
+                <tr id="tr-${order_id}">
+                    <td>${symbol}</td>
+                    <td>${operation}</td>
+                    <td>${date}</td>
+                    <td>${timestamp}</td>
+                    <td>${quantity}</td>
+                    <td>${price}</td>
+                    <td>${total}</td>
+                    <td>${state}</tr>
+                `;
+        });
+        $("#tbody-orders").html(html);
+    }
+
+    // Favorites functions
+
+    function removeFavoriteRow(e) {
+        Promise.resolve(unFollowAsset(e));
+
+    }
+
+    async function getFavorites(){
+        console.log("Get portfolio!!!");
+        const url = '{{ BASE_URL }}/api/shares/favorites/';
+        await fetch(url, {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }})
+            .then((res) => {
+                return res.json();})
+            .then((assets) => {
+                console.log(assets);
+                renderFavoritesTable(assets.favorites)
+            });
+
+    }
+
+    async function unFollowAsset(e){
+        const symbol = getValue(e);
+        const url = '{{ BASE_URL }}/api/shares/unfollow/';
+        const data = { symbol: symbol };
+        await fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }
+        }).then(function (res) {
+            if(res.status >= 200 && res.status < 400){
+                $("#id-div-"+symbol).remove();
+            }else{
+                alert("There was a problem, try again.");
+            }
+        });
+
+    }
+
+    function renderFavoritesTable(favorites){
+        console.log(favorites);
+        const html = favorites.map(favorite => {
+            console.log(favorite);
+            const symbol = favorite.symbol;
+            const url = '{{ BASE_URL }}/assets/share/'+symbol;
+            return `
+                <div class="card col-sm-12 col-md-5 col-5 ml-5 mt-3 mb-4 p-3 asset-container block" id="id-div-${symbol}">
+                    <div class="card-body media pt-3 pl-3 pb-1">
+                        <div class="container" align="center">
+                            <div class="row">
+
+                                            <div class="col-3">
+                                                ${symbol}
+                                            </div>
+
+                                            <div class="col-5">
+                                                <a
+                                                        href="${url}">
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-primary see-details-button"
+                                                        value="${symbol}"
+                                                        id="see-detail-btn-${symbol}"
+                                                        >
+
+                                                        See details
+
+                                                    </button>
+                                                </a>
+                                            </div>
+                                            <div class="col-4">
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-info unfollow-button"
+                                                    value="${symbol}"
+                                                    id="close-btn-${symbol}"
+                                                    >
+                                                    Unfollow
+                                                </button>
+                                            </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+        });
+        $("#id-div-favorites").html(html);
+        bindUnfollowBtn();
+    }
+
+    // Common functions
+    function getValue(e) {
+        console.log(e.target.value);
+        return e.target.value;
+    }
+
+
+
+
+</script>
+

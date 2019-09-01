@@ -1,0 +1,17 @@
+<div class="card col-sm-12 col-md-4 col-6 offset-md-1 offset-sm-2 offset-0 mt-5 p-0 asset-container">
+
+    <div class="card-header">
+                <h6>{{ asset.description }} <b>[{{ asset.symbol }}]</b></h6>
+    </div>
+
+    <div class="card-text offset-md-1 ">
+        {% include './cards/card/price_info.html' %}
+    </div>
+
+    <div class="card-body media pt-3 pl-3 pb-1">
+
+                    {% include 'mini_line_chart.html' %}
+
+    </div>
+    <a href="{% url 'assets:share_detail' asset.symbol %}" class="btn btn-primary">See details: {{ asset.symbol }} </a>
+</div>

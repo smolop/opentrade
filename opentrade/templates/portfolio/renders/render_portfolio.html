@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="row">
+        <div class="card col-sm-12 col-12 mt-5 mb-4 p-3 asset-container block">
+            <div class="card-body media pt-3 pl-3 pb-1">
+                <div class="container">
+                    <div class="table-wrapper">
+                        <div class="table-title">
+                            <h3>Porfolio</h3>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Operation</th>
+                                <th>Date</th>
+                                <th>Timestamp</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody-orders">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        // do stuff
+
+    }, false);
+
+    $(document).ready(function () {
+        console.log("Portfolio ready!!");
+        Promise.resolve(getPortfolio());
+    });
+
+    function bindCloseOrderBtn(){
+        $(".close-order-button").click(removeOrderRow);
+    }
+
+</script>
+

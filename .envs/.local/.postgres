@@ -1,0 +1,6 @@
+# PostgreSQL
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=opentrade
+POSTGRES_USER=opentrade_django_postgres_user
+POSTGRES_PASSWORD=opentrade_django_postgres_password

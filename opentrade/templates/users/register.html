@@ -1,0 +1,133 @@
+{% extends "users/template.html" %}
+
+{% block head_content %}
+<title>Open-Trade sign in</title>
+{% endblock%}
+
+{% block container %}
+
+
+    <div>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-5" >
+                <h3 style="color: black">Sign up</h3>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+
+    <br/>
+
+    {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+    {% endif %}
+
+    <form 
+    method="POST" 
+    action="{% url 'users:register' %}"
+    >
+
+        {% csrf_token %}
+        
+
+            <div class="form-group">
+                <input 
+                     class="form-control text-center" 
+                    type="text" 
+                    placeholder="Username" 
+                    name="username"
+                    required="true"
+                /><br/>
+            </div>
+            <div class="form-group">
+                <input 
+                    class="form-control text-center" 
+                    type="email" 
+                    placeholder="Email" 
+                    name="email"
+                    required="true"
+                /><br/>
+            </div>
+            <div class="form-group">
+                <input 
+                    class="form-control text-center" 
+                    type="password" 
+                    placeholder="Password" 
+                    name="password"
+                    required="true"
+                /><br/>
+            </div>
+            <div class="form-group">
+                <input 
+                    class="form-control text-center" 
+                    type="password" 
+                    placeholder="Password confirmation" 
+                    name="password_confirmation"
+                    required="true"
+                /><br/>
+            </div>
+            <div class="form-group">
+                <input 
+                    class="form-control align-content-center" 
+                    type="date" 
+                    placeholder="Birthdate"
+                    name="birthdate"
+                    required="true"
+                />
+                <small id="currencyHelp" class="form-text text-muted">
+                    Birthdate
+                </small>
+                <br/>
+            </div>
+            <div class="form-group">
+                <select 
+                    class="form-control text-center"  
+                    name="currency"
+                    default="EUR"
+                    required="true"
+                >
+                    <option value="EUR">EUR</option>
+                    <option value="USD">USD</option>
+                </select>
+                <small id="currencyHelp" class="form-text text-muted">
+                    Currency
+                </small>
+                <br/>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">
+                    Sign up!
+                </button>
+            </div>
+
+        
+    </form>
+
+    {% if error %}
+        <p class="alert alert-danger text-center" style="color: red;">{{ error }}</p>
+    {% endif%}
+
+    <br/>
+    <div class="row">
+        <div class="col align-self-center">
+            <a href="{% url 'users:login' %}">Sign in!</a>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+

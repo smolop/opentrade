@@ -1,0 +1,70 @@
+
+<ul class="navbar-nav col-md mr-1" id="navbar-nav-user" style="margin-left: 20%;">
+
+    <li class="nav-item">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        username:
+                    </div>
+                    <div class="row">
+                        wallet:
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row ml-1">
+                        {{ request.user.username}}
+                    </div>
+                    <div class="row ml-1" id="id-head-div-wallet_amount">
+                        {{ profile.wallet.amount }}
+                    </div>
+                </div>
+
+                <ul class="navbar-nav col-sm">
+                    <li class="nav-item dropdown" style="color: #007bff;">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                            <a class="dropdown-item" href="{% url 'users:change_passwd' %}">Change password</a>
+                            <a class="dropdown-item" href="{% url 'assets:help' %}">Ayuda</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'users:logout' %}">Sign out</a>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </li>
+    
+    <!--li class="nav-item ml-5">
+        <a href="{% url 'users:logout' %}">
+            Sign-out
+        </a>
+    </li-->
+
+</ul>
+
+ <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+ <script type="text/javascript">
+
+     window.addEventListener("DOMContentLoaded", function() {
+         // do stuff
+
+         console.log("HEADER LOADED!!");
+     }, false);
+     
+    $(document).ready(function () {
+
+        setInterval(function () {
+            Promise.resolve(setHeaderWalletAmount());
+        }, 15000);
+
+    })
+
+
+
+
+ </script>

@@ -1,0 +1,16 @@
+{% extends "../template.html" %}
+
+{% block head_content %}
+    <title>OpenTrade</title>
+{% endblock%}
+
+{% block container %}
+    <div class="container">
+        <div class="row">
+
+            {% include "./card/asset_card.html" %}
+            
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+
+
+#id-searcher {
+    margin-left: 15%;
+    /* align-self: center; */
+    /* align-content: center; */
+}
+
+#navbar-nav-user {
+    margin-left: 2%;
+}
+
+.dropdown a {
+    color: #007bff;
+}
+
+.dropdown-menu a{
+    color: #007bff;
+    margin-left: 0em;
+}
+
+.dropdown-item {
+    color: #007bff;
+}
+
+.nav-item a {
+    color: #007bff;
+    font-size: 1.1em;
+    margin-top: 0.2em;
+    margin-left: 0em;
+    font-weight: 70;
+    overflow: hidden;
+}
+
+.nav-item a:hover {
+    color: #1d5e72;
+    overflow: hidden;
+}
+
+
+

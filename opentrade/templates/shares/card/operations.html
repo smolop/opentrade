@@ -1,0 +1,98 @@
+{% load staticfiles %}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col ">
+
+            <div class="row">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Quantity:</span>
+                </div>
+                <input type="text" class="form-control" id="quantity">
+            </div>
+            </div>
+
+            <br/>
+
+            <div class="row">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Total:</span>
+                    </div>
+                    <span class="form-control disabled" id="id-total">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <br/>
+
+    <div class="row">
+
+        <div class="col">
+            <button type="button" class="btn btn-success order-op-button" id="id-buy" value="buy" >buy</button>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-danger order-op-button" id="id-sell" value="sell" >sell</button>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        console.log("Detail operatios ready!");
+
+        bindOrderOperationBtn();
+
+        bindQuantityInputText();
+    });
+
+    function bindQuantityInputText() {
+        $("#quantity").keyup((e) => {
+            const quant = e.target.value;
+            const price = {{ asset.last }};
+            $("#id-total").html(quant * price);
+        });
+    }
+
+    function bindOrderOperationBtn(){
+        $(".order-op-button").click(submitOrderOperation);
+    }
+
+    function getValue(e) {
+        return e.target.value;
+    }
+
+    function submitOrderOperation(e){
+        let operation = getValue(e);
+        let quantity = $('#quantity').val();
+        const url = '{{ BASE_URL }}/api/shares/'+operation+"/";
+        const data = {symbol: '{{asset.symbol}}', quantity: quantity};
+        fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }
+        }).then(function (res) {
+            if(res.status >= 200 && res.status < 400){
+                alert(" [Successful operation]\n You have done: "+operation+" "+quantity+" of {{asset.symbol}}");
+                setHeaderWalletAmount();
+            }else{
+                alert("Failed operation");
+            }
+        });
+
+    }
+
+
+</script>

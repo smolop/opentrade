@@ -1,0 +1,11 @@
+<div class="col">
+
+    {% for key, value in asset.items %}
+        {% if key != 'exch' and key != 'askexch' and key != 'bidexch' and key != 'symbol' and key != 'description'%}
+            <p class="card-text" style="font-size: 2em,">
+                {{key}}: {{ value }} <br/>
+                </p>  
+        {% endif %}   
+    {% endfor %}        
+           
+</div>

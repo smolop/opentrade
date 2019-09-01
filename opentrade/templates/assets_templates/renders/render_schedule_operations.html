@@ -1,0 +1,341 @@
+<div class="container">
+    <div class="row">
+        <div class="card col-sm-12 col-12 mt-5 mb-4 p-3 sch_op-container block">
+            <div class="card-body media pt-3 pl-3 pb-1">
+                <div class="container">
+                    <div class="table-wrapper">
+                        <div class="table-title">
+                            <div class="row">
+                                <div class="col-10">
+                                    <h3>Schedule operations</h3>
+                                </div>
+                                <div class="col-2">
+                                    <button
+                                            type="button"
+                                            class="btn btn-primary"
+                                            data-toggle="modal"
+                                            data-target="#myModal"
+                                    >
+                                        Add new
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Operation</th>
+                                <th>Schedule start</th>
+                                <th>Min. price</th>
+                                <th>Max. price</th>
+                                <th>Quantity</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody-orders">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add new schedule operation</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body p-5">
+                <form >
+
+                    <div class="form-group">
+                        <input
+                                class="form-control text-center"
+                                type="text"
+                                placeholder="Symbol"
+                                name="symbol"
+                                id="id-form-symbol"
+                                required="true"
+                        /><br/>
+                    </div>
+
+                    <div class="form-group">
+                        <input
+                                class="form-control text-center"
+                                type="number"
+                                placeholder="Quantity"
+                                name="quantity"
+                                id="id-form-quantity"
+                                required="true"
+                        /><br/>
+                    </div>
+                    <div class="form-group">
+                        <input
+                                class="form-control text-center"
+                                type="number"
+                                placeholder="Min. price"
+                                name="min_price"
+                                id="id-form-min-price"
+                                required="true"
+                        /><br/>
+                    </div>
+                    <div class="form-group">
+                        <input
+                                class="form-control text-center"
+                                type="number"
+                                placeholder="Max. price"
+                                name="max_price"
+                                id="id-form-max-price"
+                                required="true"
+                        /><br/>
+                    </div>
+                    <div class="form-group">
+                        <select
+                                class="form-control text-center"
+                                name="operation"
+                                default="buy"
+                                id="id-form-operation"
+                                required="true"
+                        >
+                            <option value="b">Buy</option>
+                            <option value="s">Sell</option>
+                        </select>
+                        <br/>
+                    </div>
+                    <div class="form-group">
+                        <input
+                                class="form-control align-content-center"
+                                type="date"
+                                placeholder="start_date"
+                                name="start__date"
+                                id="id-form-date"
+                                required="true"
+                        />
+                        <small id="StartDateyHelp" class="form-text text-muted">
+                            Date
+                        </small>
+                        <br/>
+                    </div>
+
+                    <div class="form-group">
+                        <input
+                                class="form-control align-content-center"
+                                type="time"
+                                placeholder="start_date"
+                                name="start_date"
+                                id="id-form-time"
+                                required="true"
+                        />
+                        <small id="StartTimeHelp" class="form-text text-muted">
+                            Time
+                        </small>
+                        <br/>
+                    </div>
+
+
+
+                </form >
+            </div>
+
+            <div class="modal-footer" style="align-content: center">
+                <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-dismiss="modal"
+                        id="id-add-new-btn">
+                            Add
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        // do stuff
+
+    }, false);
+
+    $(document).ready(function () {
+        console.log("Schedule operations ready!!");
+        setInterval(function () {
+            Promise.resolve(getScheduleOperations());
+        }, 15000);
+
+        bindAddNewlSchOpBtn();
+    });
+
+    function bindAddNewlSchOpBtn(){
+        $("#id-add-new-btn").click(addSchOpRow);
+    }
+
+    function bindCancelSchOpBtn(){
+        $(".cancel-op-button").click(removeSchOpRow);
+    }
+
+    function removeSchOpRow(e) {
+        Promise.resolve(closeSchOp(e));
+
+    }
+
+    async function getScheduleOperations(){
+        console.log("Get schedule operations!!!");
+        const url = '{{ BASE_URL }}/api/shares/get_schedule_shares_operations/';
+        await fetch(url, {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }})
+            .then((res) => {
+                return res.json();})
+            .then((data) => {
+                renderScheduleOpsTable(data.shudele_shares_operations)
+            });
+
+    }
+
+    function renderScheduleOpsTable(sch_ops){
+        const html = sch_ops.map(sch_op => {
+            const sch_op_id = sch_op.ref;
+            const symbol = sch_op.symbol;
+            const operation = sch_op.operation;
+            const date = sch_op.schedule_start;
+            const quantity = sch_op.quantity;
+            const min_price = sch_op.min_price;
+            const max_price = sch_op.max_price;
+            return `
+                <tr id="tr-${sch_op_id}">
+                    <td>${symbol}</td>
+                    <td>${operation}</td>
+                    <td>${date}</td>
+                    <td>${min_price}</td>
+                    <td>${max_price}</td>
+                    <td>${quantity}</td>
+                    <td>
+                            <button
+                                type="button"
+                                class="btn btn-primary cancel-op-button"
+                                value="${sch_op_id}"
+                                id="cancel-op-btn-${sch_op_id}"
+                                >
+                            Cancel operation
+                            </button>
+                    </td>
+                </tr>
+                `;
+        });
+        $("#tbody-orders").html(html);
+        bindCancelSchOpBtn();
+    }
+
+    async function closeSchOp(e){
+        const obj_val = getValue(e);
+        const url = '{{ BASE_URL }}/api/shares/cancel_schedule_share_operation/';
+        const data = { ref: obj_val };
+        await fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }
+        }).then(function (res) {
+            if(res.status >= 200 && res.status < 400){
+                alert(" [Successful operation]\n [Cancel schedule operation]");
+
+                $("#tr-"+obj_val).remove();
+                Promise.resolve(setHeaderWalletAmount());
+            }else{
+                alert("Failed operation");
+            }
+        });
+
+    }
+
+    async function addSchOpRow(){
+        console.log("Get schedule operations!!!");
+        const url = '{{ BASE_URL }}/api/shares/schedule_share_operation/';
+        const symbol = $("#id-form-symbol").val();
+        const quantity = $("#id-form-quantity").val();
+        const min_price = $("#id-form-min-price").val();
+        const max_price = $("#id-form-max-price").val();
+        const operation = $("#id-form-operation").val();
+        const schedule_start= $("#id-form-date").val() + " " + $("#id-form-time").val();
+        console.log(schedule_start);
+        const data =  {
+            symbol: symbol,
+            quantity: quantity,
+            min_price: min_price,
+            max_price: max_price,
+            operation: operation,
+            schedule_start: schedule_start
+        };
+        await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }})
+            .then((res) => {
+                if(res.status >= 200 && res.status < 400)
+                    return res.json();
+                else
+                    alert('Failed operation, try again!');
+            }).then((data) => {
+                console.log(data);
+                if(data)
+                    renderScheduleOpRow(data)
+            });
+
+    }
+
+    function renderScheduleOpRow(sch_op){
+        console.log(sch_op);
+            const sch_op_id = sch_op.ref;
+            const symbol = sch_op.symbol;
+            const operation = sch_op.operation;
+            const date = sch_op.schedule_start;
+            const quantity = sch_op.quantity;
+            const min_price = sch_op.min_price;
+            const max_price = sch_op.max_price;
+            const html = `
+                <tr id="tr-${sch_op_id}">
+                    <td>${symbol}</td>
+                    <td>${operation}</td>
+                    <td>${date}</td>
+                    <td>${min_price}</td>
+                    <td>${max_price}</td>
+                    <td>${quantity}</td>
+                    <td>
+                            <button
+                                type="button"
+                                class="btn btn-primary cancel-op-button"
+                                value="${sch_op_id}"
+                                id="cancel-op-btn-${sch_op_id}"
+                                >
+                            Cancel operation
+                            </button>
+                    </td>
+                </tr>
+                `;
+        $("#tbody-orders").prepend(html);
+        $("#cancel-op-btn-"+sch_op_id).click(removeSchOpRow);
+    }
+
+</script>
+

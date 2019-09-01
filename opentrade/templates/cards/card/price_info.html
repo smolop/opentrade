@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <small>Price: </small><b>{{ asset.last }}</b><br>
+        </div>
+        <div class="col">
+            <small>Percentage: </small>
+            {% if asset.change_percentage > 0 %}
+            <b style="color:green;">
+                {{ asset.change_percentage }}
+            </b>
+            {% elif asset.change_percentage < 0 %}
+            <b style="color:red;">
+                {{ asset.change_percentage }}
+            </b>
+            {% else %}
+            <b>
+                {{ asset.change_percentage }}
+            </b>
+            {% endif %}
+        </div>
+    </div>
+</div>

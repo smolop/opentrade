@@ -1,0 +1,206 @@
+<div class="container">
+
+    <div class="row">
+        <div class="col">
+
+            <div class="col">
+                <div class="row mt-3">
+                    Price: <b id="id-card-price">{{ asset.last }}</b>
+                </div>
+                <div class="row mt-2">
+                    Percentage:
+                    <b id="id-card-percentage">
+                    {% if asset.change_percentage > 0 %}
+                    <b style="color:green;">
+                        {{ asset.change_percentage }}
+                    </b>
+                    {% elif asset.change_percentage < 0 %}
+                    <b style="color:red;">
+                        {{ asset.change_percentage }}
+                    </b>
+                    {% else %}
+                    <b>
+                        {{ asset.change_percentage }}
+                    </b>
+                    {% endif %}
+                    </b>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col mt-5 mb-0 mr-2" id="id-follow-div">
+            <button id="id-follow-button" >
+
+            </button>
+        </div>
+    </div>
+
+
+</div>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+<script type="text/javascript">
+
+    window.addEventListener("DOMContentLoaded", function() {
+        // do stuff
+
+    }, false);
+
+
+    $(document).ready(function () {
+
+        console.log("Detail price ready!");
+        setInterval(function () {
+            Promise.resolve(getLastPrice());
+            Promise.resolve(getLastPercetange());
+        }, 2753);
+
+        $("#id-follow-button").click(followAction);
+
+        Promise.resolve(isFollowed());
+
+        $("#id-follow-button").click(followAction);
+
+    });
+
+    function bindFollowBtn(){
+        $("#id-follow-button").click(followAction);
+    }
+
+    async function followAction(e){
+
+        const button_id = e.target.id;
+        console.log(button_id);
+        console.log(getValue(e));
+        const val = getValue(e);
+        const bool = await isFollowed();
+        console.log(bool);
+        if(bool == true && val === 'unfollow')
+            await unfollow();
+        else if(bool == false && val === 'follow')
+            await follow();
+    }
+
+    function changeBtnToUnfollow() {
+        $("#id-follow-div").html(
+            `<button type="button" class="btn btn-outline-info" id="id-follow-button" value="unfollow">
+                Unfollow
+            </button>`
+        );
+        bindFollowBtn();
+    }
+
+    function changeBtnToFollow(){
+        $("#id-follow-div").html(
+            `<button type="button" class="btn btn-info" id="id-follow-button" value="follow">
+                Follow
+            </button>`
+        );
+        bindFollowBtn();
+    }
+
+    async function follow(){
+        const url = '{{ BASE_URL }}/api/shares/follow/';
+        const data = {symbol: '{{asset.symbol}}'};
+        await fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }
+        }).then(res => res.json())
+            .then((data) => {
+                console.log(data.symbol);
+                if(data.symbol)
+                    changeBtnToUnfollow();
+                else
+                    alert("There was a problem, try again.");
+            })
+
+    }
+
+    async function unfollow(){
+        const url = '{{ BASE_URL }}/api/shares/unfollow/';
+        const data = {symbol: '{{asset.symbol}}'};
+        await fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }
+        }).then(res => res.json())
+            .then((data) => {
+                console.log(data.symbol);
+                if(data.symbol)
+                    changeBtnToFollow();
+                else
+                    alert("There was a problem, try again.")
+            })
+    }
+
+    async function isFollowed(){
+        console.log("isFollwed executed!");
+        const url = '{{ BASE_URL }}/api/shares/is_followed/';
+        const data = {symbol: '{{asset.symbol}}'};
+        const r = await fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }
+        }).then(res => res.json())
+            .then((b) => {
+                const bool = b;
+                console.log(bool);
+                if(bool === true)
+                    changeBtnToUnfollow();
+                else
+                    changeBtnToFollow();
+                bindFollowBtn();
+                console.log("I will return"+bool);
+                return bool;
+            });
+        return r;
+    }
+
+    async function getLastPrice(){
+        const url = '{{ BASE_URL }}/api/shares/price/';
+        const data = {symbol: '{{asset.symbol}}'};
+        await fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }
+        }).then(res => res.json())
+            .then(price => $("#id-card-price").html(price));
+
+    }
+
+    async function getLastPercetange(){
+        const url = '{{ BASE_URL }}/api/shares/change_percentage/';
+        const data = {symbol: '{{asset.symbol}}'};
+        await fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Token {{token}}',
+            }
+        }).then(res => res.json())
+            .then(per =>
+                per >= 0 ?
+                    $("#id-card-percentage").html(`<b style="color: green">${per}</b>`) :
+                    $("#id-card-percentage").html(`<b style="color: red">${per}</b>`)
+            );
+
+    }
+
+
+</script>

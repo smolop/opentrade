@@ -1,0 +1,93 @@
+{% load static %}
+    <div id="dropdown-group col-lg" class="dropdown" id="id-searcher"  style="margin-left: 15%;">
+        <input id="keyword" type="search" class="form-control" placeholder="Search... ex: IBM" data-toggle="dropdown" >
+            <ul  class="navbar-nav col-2" id="ul-suggestions" role="menu" >
+                <li class="nav-item dropdown" >
+                    <div class="dropdown-menu"  id="suggestions" aria-labelledby="navbarDropdown" aria-haspopup="true" aria-expanded="false">
+                        
+                    </div>
+                </li>
+            </ul>
+    </div>
+<script>
+    //("#keyword").keyup(displayMatches);
+    $(document).ready(function () {
+
+        $("#keyword").keyup(async function (e) {
+            await sleep(2000).then( () => {
+                displayMatches(e);
+            });
+
+        });
+
+    });
+
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+
+    const assets = [];
+
+    function getEndpoint(){
+        let endpoint;
+        if (!localStorage.getItem('assetsJSON')) {
+            endpoint = "{% static 'public/files/assets.json' %}";
+            localStorage.setItem('assetsJSON', endpoint);
+        } else {
+            return localStorage.getItem('assetsJSON');
+        }
+        return endpoint
+    }
+
+    fetch(endpoint=getEndpoint())
+        .then(blob => blob.json())
+        .then(data => assets.push(...data)
+        );
+    //console.log(assets_templates);
+
+
+    const capitalize = (s) => {
+        if (typeof s !== 'string') return '';
+        return s.charAt(0).toUpperCase() + s.slice(1)
+    };
+
+
+    function findMatches(wordToSearch, assets) {
+    return assets.filter(asset => {
+        const  regexUpperCase = new RegExp(wordToSearch.toUpperCase());
+        const regex = new RegExp(capitalize(wordToSearch));
+        return asset.Symbol.match(regexUpperCase, 'gi') ||
+            asset.Name.match(regex, 'gi');
+        })
+    }
+
+    function displayMatches(e) {
+        //console.log(e.target.value);
+        if (e.target.value.length  < 1 )
+            $("#suggestions").html('');
+        else{
+            const matchedArray = findMatches(e.target.value, assets);
+            const html = matchedArray.map(asset => {
+                const regex = new RegExp(e.target.value);
+                const assetSymbol = asset.Symbol.replace(regex,
+                    `<span class="hl">${e.target.value.toUpperCase()}</span>`);
+                const assetName = asset.Name.replace(regex,
+                    `<span class="hl">${e.target.value}</span>`);
+                const symbol = asset.Symbol;
+                const url = '{{ BASE_URL }}/assets/share/'+symbol;
+                return `
+                    <a class="dropdown-item" href=${url} >
+                        <span class="asset-item">${assetSymbol}, ${assetName}</span>
+                    </a>
+                    `;
+            }).join('');
+            //console.log(html);
+            $("#suggestions").html(html);
+        }
+    }
+</script>
+           
+            
+

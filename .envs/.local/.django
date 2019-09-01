@@ -1,0 +1,6 @@
+# Redis
+REDIS_URL=redis://redis:6379/0
+
+# Flower
+CELERY_FLOWER_USER=opentrade_django_celery_user
+CELERY_FLOWER_PASSWORD=opentrade_django_celery_password

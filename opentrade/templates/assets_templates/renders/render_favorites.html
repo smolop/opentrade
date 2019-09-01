@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="row">
+
+        <div class="card col-sm-12 col-12 mt-5 mb-4 p-3 asset-container block">
+            <div class="card-body media pt-3 pl-3 pb-1">
+                <div class="container" align="center">
+
+                            <h3>Favorites</h3>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="row ml-2" id="id-div-favorites">
+    </div>
+</div>
+
+
+
+
+<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        // do stuff
+
+    }, false);
+
+    $(document).ready(function () {
+        console.log("READY!!");
+        Promise.resolve(getFavorites());
+    });
+
+    function bindUnfollowBtn(){
+        $(".unfollow-button").click(removeFavoriteRow);
+    }
+
+</script>
+

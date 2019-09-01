@@ -1,0 +1,34 @@
+
+{% extends "template.html" %}
+
+{% block head_content %}
+
+<title>OpenTrade DevMode</title>
+{% endblock%}
+
+{% block container %}
+
+{% load static %}
+
+<div class="container">
+    <div class="row">
+
+        <div class="card col-sm-12 col-12 mt-5 mb-4 p-3 asset-container block">
+            <div class="card-body media pt-3 pl-3 pb-1">
+                <div class="container" align="center">
+
+                    <h3>Developer Mode</h3>
+                    <p>We understand you want to use code to trade, so, we've make a python module for you.</p>
+                    <p>This python module really wrap up the opentrade API for quickly use.</p>
+                    <p>You can get the python module to download here! -> <a  type="button" href="{% static 'modules/_opentrade.py' %}" download>API wrapped up</a> </p>
+                    <p>If you don't know how to use it, but you know anything of python, download a demo test here ->  <a  type="button" href="{% static 'modules/_opentrade_test.py' %}" download>API testing</a> </p>
+                    <h5>Remember to put your username in the API test!</h5>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

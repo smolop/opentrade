@@ -1,0 +1,54 @@
+{% extends "users/template.html" %} {% block head_content %}
+<title>Open-Trade sign in</title>
+{% endblock%} 
+
+{% block container %}
+
+
+<div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-5" >
+                <h3 style="color: black">Sign in</h3>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+
+    <br/>
+    <form method="POST" action="{% url 'users:login' %}">
+
+        {% csrf_token %}
+
+        <div class="form-group">
+            <input class="form-control text-center" type="text" placeholder="Username" name="username" />
+            <br/>
+        </div>
+        <div class="form-group">
+            <input class="form-control text-center" type="password" placeholder="Password" name="password" /><br/>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Sign in!</button>
+        </div>
+
+
+    </form>
+
+    {% if error %}
+    <p class="alert alert-danger text-center" style="color: red;">{{ error }}</p>
+    {% endif%}
+   
+    <br/>
+    <div class="row">
+        <div class="col align-self-center">
+            <a href="{% url 'users:register' %}">Sign up!</a>
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock %}

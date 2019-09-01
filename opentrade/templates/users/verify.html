@@ -1,0 +1,40 @@
+{% extends "users/template.html" %} {% block head_content %}
+<title>Open-Trade sign in</title>
+{% endblock%} {% block container %}
+
+
+<div>
+
+    <form method="POST" action="{% url 'users:verify' %}">
+
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <div class="form-group">
+                <input class="form-control text-center" type="text" placeholder="Token" name="_token_" /><br/>
+                <small id="tokenHelp" class="form-text text-muted">
+                    Put in the box the token that you have obtained!
+                </small>
+                <br/>
+            </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Verify!</button>
+        </div>
+
+
+    </form>
+    {% if error %}
+    <p class="alert alert-danger text-center" style="color: red;">{{ error }}</p>
+    {% endif%}
+    <br/>
+    <div class="row">
+        <div class="col align-self-center">
+            <a href="{% url 'users:login' %}">Sign in!</a>
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock %}

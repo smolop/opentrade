@@ -1,0 +1,39 @@
+<div class="card col-sm-12 col-12 mt-5 mb-4 p-3 asset-container block">
+    <div class="card-body media pt-3 pl-3 pb-1">
+
+        <div class="col-sm-3 col-md-4 col-3" style="border: 5; border-color: red;">
+            
+            {% include './asset_description.html' %}
+
+            {% include './asset_info.html' %}
+            
+        </div>
+
+        <div class="col-sm-12 col-md-8 col-8 mr-auto" style="border: 5; border-color: red;">
+
+            <div class="card " style="border: 5px; border-color: #007BFF; width: 100%" >
+                {% include './line_chart.html' %}
+            </div>
+
+            <br/>
+
+            <div class="container">
+                <div class="row">
+
+                    <div class="col">
+                        {% include './price_info.html' %}
+                    </div>
+
+                    <div class="col">
+                        {% include './operations.html' %}
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
