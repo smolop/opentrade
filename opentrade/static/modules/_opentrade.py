@@ -10,7 +10,7 @@ class OpenTradeActions(object):
         super(OpenTradeActions, self).__init__()
         self.__host = "http://localhost:8000/api"
         self.__username = kwargs['username']
-        passwd = (getpass.getpass('Password:'))
+        passwd = getpass.getpass('Password:')
         self.__token=self.__get_token(passwd)
         print(self.__username)
 

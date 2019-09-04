@@ -1,10 +1,288 @@
 {% load staticfiles %}
+
+
+        <div class="row" align="left">
+                <div class="col-0">
+                </div>
+                <div class="col-2">
+                        <select
+                                class="form-control text-center"
+                                name="interval"
+                                default="daily"
+                                id="interval"
+                        >
+                                <option value="daily">daily</option>
+                                <option value="weekly">weekly</option>
+                                <option value="weekly">monthly</option>
+                        </select>
+                        <small id="intervalHelp" class="form-text text-muted">
+                                Interval
+                        </small>
+                </div>
+
+                <div class="col-4">
+                        <input
+                                class="form-control align-content-center"
+                                type="date"
+                                placeholder="Start"
+                                id="start-date"
+                                name="start"
+                        />
+                        <small id="startDateHelp" class="form-text text-muted">
+                                Start date
+                        </small>
+                </div>
+
+                <div class="col-4">
+                        <input
+                                class="form-control align-content-center"
+                                type="date"
+                                placeholder="Start"
+                                id="end-date"
+                                name="start"
+                        />
+                        <small id="endDateyHelp" class="form-text text-muted">
+                                End date
+                        </small>
+                </div>
+
+                <div class="col-2">
+                        <select
+                                class="form-control text-center"
+                                name="tool"
+                                default="Tools"
+                                id="tools"
+                        >
+                                <option value="Tools">Tools</option>
+                                <option value="SMA">SMA</option>
+                                <option value="EMA">EMA</option>
+                        </select>
+                        <small id="toolsHelp" class="form-text text-muted">
+                                Tools
+                        </small>
+                </div>
+
+        </div>
+
         <canvas id="{{asset.symbol}}Chart" width="100%" height="70%"></canvas>
 
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
         <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
         <script type="text/javascript">
-            $.get('{% url "utils:line_chart_json" asset.symbol %}', function(dat) {
+
+                let symbol = '{{asset.symbol}}';
+                let interval = 'daily';
+                let start_date = $("#start-date").val();
+                let end_date = $("#end-date").val();
+
+                $(document).ready(function () {
+                        console.log("line chart ready");
+
+                        Date.prototype.toDateInputValue = (function() {
+                                let local = new Date(this);
+                                local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+                                return local.toJSON().slice(0,10);
+                        });
+
+                        $("#end-date").val(new Date().toDateInputValue());
+
+                        const now = new Date();
+                        const month = now.getMonth();
+                        const day = now.getDate();
+                        const one_month_ago = now.getFullYear() + '-' + month + '-' + day;
+                        $('#start-date').val(new Date(one_month_ago).toDateInputValue());
+
+                        $('#interval').change(function (e) {
+                                console.log("FROM INTERVAL");
+                                interval = e.target.value;
+                                get_history_chart();
+                        });
+
+                        $('#start-date').change(function (e) {
+                                console.log("FROM START DATE");
+                                start_date = e.target.value;
+                                console.log(start_date);
+                                get_history_chart();
+                        });
+
+                        $('#end-date').change(function (e) {
+                                console.log("FROM END DATE");
+                                end_date = e.target.value;
+                                console.log(end_date);
+                                get_history_chart();
+                        });
+
+                        $('#tools').change(function () {
+                                console.log("FROM INTERVAL");
+                                update_chart();
+                        });
+
+                        start_date =  $('#start-date').val();
+                        end_date =  $('#end-date').val();
+
+                        printValues();
+                        get_history_chart();
+
+                });
+
+
+
+                function printValues(){
+                        console.log(symbol);
+                        console.log(interval);
+                        console.log(start_date);
+                        console.log(end_date);
+                }
+
+                function get_history_chart(){
+                        console.log("EXECUTING: get_history_chart()");
+                        const data = {
+                                symbol: symbol,
+                                interval: interval,
+                                start: start_date,
+                                end: end_date,
+                        };
+                        const url = '{{ BASE_URL }}/api/shares/history/';
+                        fetch(url, {
+                                method: 'POST',
+                                body : JSON.stringify(data),
+                                headers:{
+                                        'Content-Type': 'application/json',
+                                        'Authorization': 'Token {{token}}',
+                                }})
+                                .then((res) => {
+                                        return res.json();})
+                                .then((data) => {
+                                        render_line_chart(data.history);
+                                });
+
+                }
+
+                let line_chart;
+                let history_data;
+
+                   function render_line_chart(history){
+                        console.log("EXECUTING: render_line_chart()");
+                                let chart_color = 'rgba(0,62,125,0.82)';
+                                console.log('{{asset.change_percentage}}');
+                                if ('{{asset.change_percentage}}' < 0 )
+                                        chart_color = 'rgba(220,53,69,0.82)';
+                                else if('{{asset.change_percentage}}' > 0)
+                                        chart_color =  'rgba(40,167,69,0.82)';
+
+                                const labels = [];
+                                const data = [];
+                                history_data = history;
+                                history.day.map(day => {
+                                        labels.push(day.date);
+                                        data.push(day.close);
+                                });
+
+                                const ctx = $('#'+symbol+'Chart').get(0).getContext("2d");
+
+                                if(line_chart)
+                                        line_chart.destroy();
+
+                                line_chart = new Chart(ctx, {
+                                        type: 'line',
+                                        data: {
+                                                labels: labels,
+                                                datasets: [
+                                                        {
+                                                        label: symbol,
+                                                        data: data,
+                                                        backgroundColor: chart_color,
+                                                },
+
+                                                ],
+                                        },
+
+                                });
+                                update_chart();
+                }
+
+                function update_chart() {
+                        const tool = $('#tools').val();
+                        line_chart.data.datasets.filter(function(obj) {
+                                if(obj.label.toString() === tool.toString()) {
+                                        let removalIndex = line_chart.data.datasets.indexOf(obj);
+                                        if(removalIndex >= 0) {
+                                                line_chart.data.datasets.splice(removalIndex, 1);
+                                        }
+                                        line_chart.update();
+                                }
+                        });
+
+                        clear_chart();
+                        if(tool === 'SMA')
+                                renderSMA(history_data);
+                        if(tool === 'EMA')
+                                renderEMA(history_data);
+
+                }
+
+                function clear_chart() {
+                        for(let i = line_chart.data.datasets.length; i >= 1; i--)
+                                line_chart.data.datasets.splice(i, 1);
+                        line_chart.update();
+                }
+
+                function renderSMA(history) {
+                        const data = [];
+                        let sum = 0;
+                        history.day.map((day, i) => {
+                                sum += day.close;
+                                if(i === 0)
+                                        data.push(day.close);
+                                else
+                                        data.push(sum / (i + 1));
+                        });
+
+
+                        line_chart.data.datasets.push({
+                                label: "SMA",
+                                data: data,
+                                backgroundColor: "purple",
+                                borderColor: "lightpurple",
+                                fill: false,
+                                lineTension: 0.5,
+                                radius: 2
+                        });
+                        line_chart.update();
+                }
+
+                function renderEMA(history) {
+                        const data = [];
+                        let sum = 0;
+                        let EMA_t_prev = 0;
+                        let EMA_t_current = 0;
+                        history.day.map((day, i) => {
+                                sum += day.close;
+                                const alfa = 2/(i+1);
+                                if(i === 0)
+                                        data.push(day.close);
+                                else {
+                                        EMA_t_current = alfa * day.close + (1 - alfa) * EMA_t_prev;
+                                        EMA_t_prev = EMA_t_current;
+                                        data.push(EMA_t_current);
+                                }
+                        });
+
+
+                        line_chart.data.datasets.push({
+                                label: "EMA",
+                                data: data,
+                                backgroundColor: "orange",
+                                borderColor: "lightorange",
+                                fill: false,
+                                lineTension: 0.5,
+                                radius: 2
+                        });
+                        line_chart.update();
+                }
+
+                /*
+            $.get(url='{% url "utils:line_chart_json" asset.symbol %}', function(dat) {
                     var chart_color = 'rgba(0,62,125,0.82)';
                     console.log('{{asset.change_percentage}}');
                     if ('{{asset.change_percentage}}' < 0 )
@@ -30,4 +308,6 @@
                 });
 
             });
+                */
+
         </script>
