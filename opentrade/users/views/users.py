@@ -13,6 +13,7 @@ import datetime
 
 from opentrade.api.serializers.users import AccountVerificationSerializer
 
+from rest_framework.authtoken.models import Token
 from opentrade.assets.views.shares import get_common_context
 
 # Models
@@ -51,6 +52,11 @@ def logout_view(request):
 
 @login_required
 def change_pass_view(request):
+    user = request.user
+ 
+    profile = Profile.objects.get(user=user)
+    token, created = Token.objects.get_or_create(user=user) 
+
     if request.POST:
         username = request.user
         old_password = request.POST['old_password']
@@ -59,7 +65,11 @@ def change_pass_view(request):
             new_password = request.POST['new_password']
             new_password_confirmation = request.POST['new_password_confirmation']
             if new_password != new_password_confirmation:
-                context = {'error': "Passwords don't match" }
+                context = {
+                                'error': "Passwords don't match" ,
+                                'profile': profile,
+                                'token': token 
+                            }
                 return render(request, 'users/change_password.html', context=context)
             user = User.objects.get(username=username)
             user.set_password(new_password)
@@ -69,7 +79,11 @@ def change_pass_view(request):
                 logout(request)
                 return redirect('users:login')
             else:
-                context = {'error': "Password hadn't changed." }
+                context = {
+                            'error': "Password hadn't changed.",
+                            'profile': profile,
+                            'token': token 
+                        }
                 return render(request, 'users/change_password.html', context=context)
         else:
             context = {'error': "Invalid credentials." }
@@ -101,7 +115,7 @@ def register_view(request):
             context = {'error': "Passwords don't match" }
             return render(request, 'users/register.html', context=context)
         try:
-            user = User.objects.create_user(username=username, email=email, password=password)
+            user = User.objects.create_user(username=username, email=email, password=password, is_verified=True)
             user.save()
             print("USER SAVED")
         except IntegrityError:
@@ -126,9 +140,10 @@ def register_view(request):
             wallet=wallet
         )
         profile.save()
-        send_confirmation_email(user_pk=user.pk)
+        #send_confirmation_email(user_pk=user.pk)
         #return render(request, 'users/register.html', context=context)
-        return render(request, 'users/verify.html')
+        #return render(request, 'users/verify.html')
+        return render(request, 'users/login.html')
     return render(request, 'users/register.html')
 
 def verify_view(request):

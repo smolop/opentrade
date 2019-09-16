@@ -57,13 +57,15 @@
             Promise.resolve(getLastPercetange());
         }, 2753);
 
-        $("#id-follow-button").click(followAction);
+        //$("#id-follow-button").click(followAction);
 
-        Promise.resolve(isFollowed());
+        isFollowed();
 
-        $("#id-follow-button").click(followAction);
+        //$("#id-follow-button").click(followAction);
 
     });
+
+    let is_followed = false;
 
     function bindFollowBtn(){
         $("#id-follow-button").click(followAction);
@@ -75,15 +77,16 @@
         console.log(button_id);
         console.log(getValue(e));
         const val = getValue(e);
-        const bool = await isFollowed();
+        const bool = is_followed;
         console.log(bool);
-        if(bool == true && val === 'unfollow')
-            await unfollow();
-        else if(bool == false && val === 'follow')
-            await follow();
+        if(bool === true && val === 'unfollow')
+            unfollow();
+        else if(bool === false && val === 'follow')
+            follow();
     }
 
     function changeBtnToUnfollow() {
+        is_followed = true;
         $("#id-follow-div").html(
             `<button type="button" class="btn btn-outline-info" id="id-follow-button" value="unfollow">
                 Unfollow
@@ -93,6 +96,7 @@
     }
 
     function changeBtnToFollow(){
+        is_followed = false;
         $("#id-follow-div").html(
             `<button type="button" class="btn btn-info" id="id-follow-button" value="follow">
                 Follow
@@ -101,10 +105,10 @@
         bindFollowBtn();
     }
 
-    async function follow(){
+    function follow(){
         const url = '{{ BASE_URL }}/api/shares/follow/';
         const data = {symbol: '{{asset.symbol}}'};
-        await fetch(url, {
+        fetch(url, {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data), // data can be `string` or {object}!
             headers:{
@@ -116,16 +120,16 @@
                 console.log(data.symbol);
                 if(data.symbol)
                     changeBtnToUnfollow();
-                else
+                else if(!data.symbol)
                     alert("There was a problem, try again.");
             })
 
     }
 
-    async function unfollow(){
+    function unfollow(){
         const url = '{{ BASE_URL }}/api/shares/unfollow/';
         const data = {symbol: '{{asset.symbol}}'};
-        await fetch(url, {
+        fetch(url, {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data), // data can be `string` or {object}!
             headers:{
@@ -137,16 +141,16 @@
                 console.log(data.symbol);
                 if(data.symbol)
                     changeBtnToFollow();
-                else
-                    alert("There was a problem, try again.")
+                //else if(!data.symbol)
+                //  alert("There was a problem, try again.");
             })
     }
 
-    async function isFollowed(){
-        console.log("isFollwed executed!");
+    function isFollowed(){
+        console.log("isFollowed executed!");
         const url = '{{ BASE_URL }}/api/shares/is_followed/';
         const data = {symbol: '{{asset.symbol}}'};
-        const r = await fetch(url, {
+        const r = fetch(url, {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data), // data can be `string` or {object}!
             headers:{
@@ -162,9 +166,10 @@
                 else
                     changeBtnToFollow();
                 bindFollowBtn();
-                console.log("I will return"+bool);
+                console.log(bool);
                 return bool;
             });
+        is_followed = r;
         return r;
     }
 

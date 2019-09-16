@@ -16,9 +16,7 @@ import json
 
 @login_required
 def share_view(request, symbol):
-
     quote = get_json_share(symbol)
-
     user = request.user
     profile = Profile.objects.get(user=user)
     token, created = Token.objects.get_or_create(user=user) 
@@ -27,7 +25,6 @@ def share_view(request, symbol):
         'profile': profile,
         'token': token 
     }
-
     return render(request, 'shares/details.html' , context)
 
 @login_required

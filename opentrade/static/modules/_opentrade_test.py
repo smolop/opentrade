@@ -20,7 +20,7 @@ print(user_patch)
 
 
 # ----------------
-# Shares test unctions
+# Shares test functions
 # ----------------
 
 print("-- Get Quote --")

@@ -48,7 +48,8 @@ class FavoriteFollowSerializer(serializers.Serializer):
 
     def create(self, data):
         user = self.context['user']
-        if not Favorite.objects.filter(symbol=data['symbol'], user=user).exists():
+        exists = Favorite.objects.filter(symbol=data['symbol'], user=user).exists()
+        if not exists:
             favorite = Favorite.objects.create(symbol=data['symbol'], user=user)
             favorite.save()
         else:
@@ -178,7 +179,7 @@ class CloseSharesScheduleOperationSerializer(serializers.Serializer):
         ref = data['ref']
         shares_order = Share.objects.filter(ref=ref, closed=False)
         if not shares_order:
-            raise serializers.ValidationError("Shares oreder operation impossible to do!")
+            raise serializers.ValidationError("Shares order operation impossible to do!")
         return data
 
     def create(self, data):
@@ -203,7 +204,6 @@ class SharesScheduleOperationSerializer(serializers.ModelSerializer):
 
         model = ScheduledSharesOperations
 
-        #fields = '__all__'
         exclude = ('user', )
 
     def validate(self, data):
@@ -217,7 +217,10 @@ class SharesScheduleOperationSerializer(serializers.ModelSerializer):
         profile = Profile.objects.get(user=user)
         if not f_profile.has_funds(profile, amount):
             raise serializers.ValidationError("Your funds aren't enough as required")
-        if schedule_start <= timezone.localtime():
+        if schedule_start < timezone.localtime():
+            print(schedule_start)
+            print(timezone.localtime())
+            print(schedule_start >= timezone.localtime())
             raise serializers.ValidationError("Schedule start invalid")
         if data['min_price'] < 0:
             raise serializers.ValidationError("Minimun price lesss than zero, seriously?")

@@ -63,7 +63,7 @@ class UserSignUpSerializer(serializers.Serializer):
         data.pop('password_confirmation')
         birthdate = data.pop('birthdate')
         currency = data.pop('currency')
-        user = User.objects.create_user(**data, is_verified=False)
+        user = User.objects.create_user(**data, is_verified=True)
         portfolio = Portfolio.objects.create()
         wallet = Wallet.objects.create()
         Profile.objects.create(

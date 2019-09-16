@@ -171,10 +171,11 @@
 
     $(document).ready(function () {
         console.log("Schedule operations ready!!");
+
+        Promise.resolve(getScheduleOperations());
         setInterval(function () {
             Promise.resolve(getScheduleOperations());
         }, 15000);
-
         bindAddNewlSchOpBtn();
     });
 
