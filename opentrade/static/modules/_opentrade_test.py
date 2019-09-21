@@ -1,6 +1,6 @@
 from _opentrade import OpenTradeActions as OPA
 
-opa = OPA(username='user_test_01')
+opa = OPA(username='opentrade')
 
 # ----------------
 # Users test functions
@@ -119,7 +119,7 @@ data = {
     'min_price': 120,
     'max_price': 140,
     'operation': 's',
-    'schedule_start': '2019-10-08 20:00:00'
+    'schedule_start': '2019-11-04 20:00:00'
 }
 schedule_share_op = opa.schedule_share_operation(data)
 print(schedule_share_op)

@@ -2,17 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5a280800-03df-488d-b553-d95db6c4cc52" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/settings/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/settings/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/opentrade/api/serializers/shares.py" beforeDir="false" afterPath="$PROJECT_DIR$/opentrade/api/serializers/shares.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/opentrade/api/views/shares.py" beforeDir="false" afterPath="$PROJECT_DIR$/opentrade/api/views/shares.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/opentrade/assets/views/shares.py" beforeDir="false" afterPath="$PROJECT_DIR$/opentrade/assets/views/shares.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/opentrade/static/modules/_opentrade_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/opentrade/static/modules/_opentrade_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/opentrade/static/modules/_opentrade_test_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/opentrade/static/modules/_opentrade_test_functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/opentrade/templates/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/opentrade/templates/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/opentrade/templates/assets_templates/renders/render_schedule_operations.html" beforeDir="false" afterPath="$PROJECT_DIR$/opentrade/templates/assets_templates/renders/render_schedule_operations.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/opentrade/templates/shares/card/price_info.html" beforeDir="false" afterPath="$PROJECT_DIR$/opentrade/templates/shares/card/price_info.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/opentrade/users/views/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/opentrade/users/views/users.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,8 +30,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/opentrade/api/serializers/shares.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="498">
-              <caret line="147" column="31" lean-forward="true" selection-start-line="147" selection-start-column="31" selection-end-line="147" selection-end-column="31" />
+            <state relative-caret-position="2040">
+              <caret line="147" column="31" selection-start-line="147" selection-start-column="31" selection-end-line="147" selection-end-column="31" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
               </folding>
@@ -49,8 +42,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/opentrade/users/models/profiles.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="40" selection-end-column="29" />
+            <state relative-caret-position="30">
+              <caret line="9" selection-start-line="9" selection-end-line="40" selection-end-column="29" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -61,8 +54,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/opentrade/users/views/users.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="69">
-              <caret line="34" selection-start-line="34" selection-end-line="45" selection-end-column="46" />
+            <state relative-caret-position="283">
+              <caret line="45" column="46" lean-forward="true" selection-start-line="45" selection-start-column="46" selection-end-line="45" selection-end-column="46" />
               <folding>
                 <element signature="e#0#45#0" expanded="true" />
               </folding>
@@ -95,6 +88,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -124,6 +118,26 @@
               <item name="opentrade" type="b2602c69:ProjectViewProjectNode" />
               <item name="opentrade" type="462c0819:PsiDirectoryNode" />
               <item name="opentrade" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="opentrade" type="b2602c69:ProjectViewProjectNode" />
+              <item name="opentrade" type="462c0819:PsiDirectoryNode" />
+              <item name="opentrade" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="opentrade" type="b2602c69:ProjectViewProjectNode" />
+              <item name="opentrade" type="462c0819:PsiDirectoryNode" />
+              <item name="opentrade" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="opentrade" type="b2602c69:ProjectViewProjectNode" />
+              <item name="opentrade" type="462c0819:PsiDirectoryNode" />
+              <item name="opentrade" type="462c0819:PsiDirectoryNode" />
               <item name="users" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -144,7 +158,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -187,16 +200,17 @@
       <workItem from="1567016702484" duration="908000" />
       <workItem from="1568296399294" duration="1277000" />
       <workItem from="1568483679068" duration="1255000" />
+      <workItem from="1568895015280" duration="154000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3440000" />
+    <option name="totallyTimeSpent" value="3594000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="215" y="95" width="1292" height="793" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2576" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2616" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -235,8 +249,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/opentrade/api/serializers/shares.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="498">
-          <caret line="147" column="31" lean-forward="true" selection-start-line="147" selection-start-column="31" selection-end-line="147" selection-end-column="31" />
+        <state relative-caret-position="2040">
+          <caret line="147" column="31" selection-start-line="147" selection-start-column="31" selection-end-line="147" selection-end-column="31" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
           </folding>
@@ -245,8 +259,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/opentrade/users/models/profiles.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="40" selection-end-column="29" />
+        <state relative-caret-position="30">
+          <caret line="9" selection-start-line="9" selection-end-line="40" selection-end-column="29" />
           <folding>
             <element signature="e#0#28#0" expanded="true" />
           </folding>
@@ -255,8 +269,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/opentrade/users/views/users.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="34" selection-start-line="34" selection-end-line="45" selection-end-column="46" />
+        <state relative-caret-position="283">
+          <caret line="45" column="46" lean-forward="true" selection-start-line="45" selection-start-column="46" selection-end-line="45" selection-end-column="46" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
           </folding>
